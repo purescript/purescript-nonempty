@@ -30,7 +30,7 @@ infix 5 :|
 (:|) :: forall f a. a -> f a -> NonEmpty f a
 (:|) = NonEmpty
 
--- | foldl1
+-- | Fold a non-empty structure, collecting results using a binary operation.
 foldl1 :: forall f a s. (Foldable f) => (a -> a -> a) -> NonEmpty f a -> a
 foldl1 f (NonEmpty a fa) = foldl f a fa
 
