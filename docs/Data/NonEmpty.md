@@ -53,7 +53,7 @@ Fold a non-empty structure, collecting results using a binary operation.
 foldMap1 :: forall f a s. (Semigroup s, Foldable f) => (a -> s) -> NonEmpty f a -> s
 ```
 
-Fold a non-empty structure, collecting results in a `Semigroup`. 
+Fold a non-empty structure, collecting results in a `Semigroup`.
 
 #### `fold1`
 
@@ -62,5 +62,17 @@ fold1 :: forall f s. (Semigroup s, Foldable f) => NonEmpty f s -> s
 ```
 
 Fold a non-empty structure.
+
+#### `fromNonEmpty`
+
+``` purescript
+fromNonEmpty :: forall f a r. (a -> f a -> r) -> NonEmpty f a -> r
+```
+
+#### `oneOf`
+
+``` purescript
+oneOf :: forall f a. (Alternative f) => NonEmpty f a -> f a
+```
 
 
