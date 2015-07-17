@@ -14,7 +14,8 @@ module Data.NonEmpty
 import Prelude
 
 import Control.Alternative (Alternative)
-import Control.Alt ((<|>))
+import Control.Plus (Plus, empty)
+import Control.Alt (Alt, (<|>))
 
 import Data.Foldable (Foldable, foldl, foldr, foldMap)
 import Data.Traversable (Traversable, traverse, sequence)
@@ -67,6 +68,15 @@ instance ordNonEmpty :: (Ord a, Ord (f a)) => Ord (NonEmpty f a) where
 
 instance functorNonEmpty :: (Functor f) => Functor (NonEmpty f) where
   map f (NonEmpty a fa) = NonEmpty (f a) (map f fa)
+
+instance applyNonEmpty :: (Apply f) => Apply (NonEmpty f) where
+  apply (NonEmpty f fs) (NonEmpty a fas) = NonEmpty (f a) (apply fs fas)
+
+instance applicativeNonEmpty :: (Alternative f) => Applicative (NonEmpty f) where
+  pure x = NonEmpty x empty
+
+instance altNonEmpty :: (Alternative f) => Alt (NonEmpty f) where
+  alt (NonEmpty a1 fa1) (NonEmpty a2 fa2) = NonEmpty a1 (fa1 <|> pure a2 <|> fa2)
 
 instance foldableNonEmpty :: (Foldable f) => Foldable (NonEmpty f) where
   foldMap f (NonEmpty a fa) = f a <> foldMap f fa
