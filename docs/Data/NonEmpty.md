@@ -29,6 +29,14 @@ instance foldableNonEmpty :: (Foldable f) => Foldable (NonEmpty f)
 instance traversableNonEmpty :: (Traversable f) => Traversable (NonEmpty f)
 ```
 
+#### `singleton`
+
+``` purescript
+singleton :: forall f a. (Plus f) => a -> NonEmpty f a
+```
+
+Create a non-empty structure with a single value.
+
 #### `(:|)`
 
 ``` purescript

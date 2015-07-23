@@ -3,6 +3,7 @@
 
 module Data.NonEmpty
   ( NonEmpty(..)
+  , singleton
   , (:|)
   , foldl1
   , foldMap1
@@ -13,8 +14,9 @@ module Data.NonEmpty
 
 import Prelude
 
-import Control.Alternative (Alternative)
 import Control.Alt ((<|>))
+import Control.Alternative (Alternative)
+import Control.Plus (Plus, empty)
 
 import Data.Foldable (Foldable, foldl, foldr, foldMap)
 import Data.Traversable (Traversable, traverse, sequence)
@@ -30,6 +32,10 @@ import Data.Traversable (Traversable, traverse, sequence)
 data NonEmpty f a = NonEmpty a (f a)
 
 infix 5 :|
+
+-- | Create a non-empty structure with a single value.
+singleton :: forall f a. (Plus f) => a -> NonEmpty f a
+singleton a = NonEmpty a empty
 
 -- | An infix synonym for `NonEmpty`.
 (:|) :: forall f a. a -> f a -> NonEmpty f a
