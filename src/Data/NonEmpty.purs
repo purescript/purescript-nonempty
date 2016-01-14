@@ -42,7 +42,7 @@ singleton a = NonEmpty a empty
 (:|) = NonEmpty
 
 -- | Fold a non-empty structure, collecting results using a binary operation.
-foldl1 :: forall f a s. (Foldable f) => (a -> a -> a) -> NonEmpty f a -> a
+foldl1 :: forall f a. (Foldable f) => (a -> a -> a) -> NonEmpty f a -> a
 foldl1 f (NonEmpty a fa) = foldl f a fa
 
 -- | Fold a non-empty structure, collecting results in a `Semigroup`.
