@@ -21,12 +21,12 @@ nonEmptyList = 0 :| empty
 
 ##### Instances
 ``` purescript
-instance showNonEmpty :: (Show a, Show (f a)) => Show (NonEmpty f a)
-instance eqNonEmpty :: (Eq a, Eq (f a)) => Eq (NonEmpty f a)
-instance ordNonEmpty :: (Ord a, Ord (f a)) => Ord (NonEmpty f a)
-instance functorNonEmpty :: (Functor f) => Functor (NonEmpty f)
-instance foldableNonEmpty :: (Foldable f) => Foldable (NonEmpty f)
-instance traversableNonEmpty :: (Traversable f) => Traversable (NonEmpty f)
+(Show a, Show (f a)) => Show (NonEmpty f a)
+(Eq a, Eq (f a)) => Eq (NonEmpty f a)
+(Ord a, Ord (f a)) => Ord (NonEmpty f a)
+(Functor f) => Functor (NonEmpty f)
+(Foldable f) => Foldable (NonEmpty f)
+(Traversable f) => Traversable (NonEmpty f)
 ```
 
 #### `singleton`
@@ -50,7 +50,7 @@ An infix synonym for `NonEmpty`.
 #### `foldl1`
 
 ``` purescript
-foldl1 :: forall f a s. (Foldable f) => (a -> a -> a) -> NonEmpty f a -> a
+foldl1 :: forall f a. (Foldable f) => (a -> a -> a) -> NonEmpty f a -> a
 ```
 
 Fold a non-empty structure, collecting results using a binary operation.
@@ -82,5 +82,21 @@ fromNonEmpty :: forall f a r. (a -> f a -> r) -> NonEmpty f a -> r
 ``` purescript
 oneOf :: forall f a. (Alternative f) => NonEmpty f a -> f a
 ```
+
+#### `head`
+
+``` purescript
+head :: forall f a. NonEmpty f a -> a
+```
+
+Get the 'first' element of a non-empty container.
+
+#### `tail`
+
+``` purescript
+tail :: forall f a. NonEmpty f a -> f a
+```
+
+Get everything but the 'first' element of a non-empty container.
 
 

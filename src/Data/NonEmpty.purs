@@ -10,6 +10,8 @@ module Data.NonEmpty
   , fold1
   , fromNonEmpty
   , oneOf
+  , head
+  , tail
   ) where
 
 import Prelude
@@ -58,6 +60,14 @@ fromNonEmpty f (NonEmpty a fa) = a `f` fa
 
 oneOf :: forall f a. (Alternative f) => NonEmpty f a -> f a
 oneOf (NonEmpty a fa) = pure a <|> fa
+
+-- | Get the 'first' element of a non-empty container.
+head :: forall f a. NonEmpty f a -> a
+head (NonEmpty x _) = x
+
+-- | Get everything but the 'first' element of a non-empty container.
+tail :: forall f a. NonEmpty f a -> f a
+tail (NonEmpty _ xs) = xs
 
 instance showNonEmpty :: (Show a, Show (f a)) => Show (NonEmpty f a) where
   show (NonEmpty a fa) = "(NonEmpty " ++ show a ++ " " ++ show fa ++ ")"
