@@ -29,6 +29,22 @@ nonEmptyList = 0 :| empty
 (Traversable f) => Traversable (NonEmpty f)
 ```
 
+#### `nonEmpty`
+
+``` purescript
+nonEmpty :: forall f a. a -> f a -> NonEmpty f a
+```
+
+#### `(:|)`
+
+``` purescript
+infixr 5 nonEmpty as :|
+```
+
+_right-associative / precedence 5_
+
+An infix synonym for `NonEmpty`.
+
 #### `singleton`
 
 ``` purescript
@@ -36,16 +52,6 @@ singleton :: forall f a. (Plus f) => a -> NonEmpty f a
 ```
 
 Create a non-empty structure with a single value.
-
-#### `(:|)`
-
-``` purescript
-(:|) :: forall f a. a -> f a -> NonEmpty f a
-```
-
-_non-associative / precedence 5_
-
-An infix synonym for `NonEmpty`.
 
 #### `foldl1`
 
