@@ -29,16 +29,10 @@ nonEmptyList = 0 :| empty
 (Traversable f) => Traversable (NonEmpty f)
 ```
 
-#### `nonEmpty`
-
-``` purescript
-nonEmpty :: forall f a. a -> f a -> NonEmpty f a
-```
-
 #### `(:|)`
 
 ``` purescript
-infixr 5 nonEmpty as :|
+infixr 5 NonEmpty as :|
 ```
 
 _right-associative / precedence 5_
