@@ -1,10 +1,15 @@
 {
   "name": "purescript-nonempty",
+  "homepage": "https://github.com/purescript-contrib/purescript-nonempty",
+  "description": "A generic non-empty data structure",
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
-    "output"
+    "output",
+    "test",
+    "bower.json",
+    "package.json"
   ],
   "repository": {
     "type": "git",
@@ -14,7 +19,7 @@
     "purescript-console": "^0.1.0",
     "purescript-foldable-traversable": "^0.4.0"
   },
-  "dev-dependencies": {
+  "devDependencies": {
     "purescript-assert": "^0.1.0"
   }
 }
