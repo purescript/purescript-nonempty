@@ -37,11 +37,11 @@ data NonEmpty f a = NonEmpty a (f a)
 infixr 5 NonEmpty as :|
 
 -- | Create a non-empty structure with a single value.
-singleton :: forall f a. (Plus f) => a -> NonEmpty f a
+singleton :: forall f a. Plus f => a -> NonEmpty f a
 singleton a = a :| empty
 
 -- | Fold a non-empty structure, collecting results using a binary operation.
-foldl1 :: forall f a. (Foldable f) => (a -> a -> a) -> NonEmpty f a -> a
+foldl1 :: forall f a. Foldable f => (a -> a -> a) -> NonEmpty f a -> a
 foldl1 f (a :| fa) = foldl f a fa
 
 -- | Fold a non-empty structure, collecting results in a `Semigroup`.
@@ -55,7 +55,7 @@ fold1 = foldMap1 id
 fromNonEmpty :: forall f a r. (a -> f a -> r) -> NonEmpty f a -> r
 fromNonEmpty f (a :| fa) = a `f` fa
 
-oneOf :: forall f a. (Alternative f) => NonEmpty f a -> f a
+oneOf :: forall f a. Alternative f => NonEmpty f a -> f a
 oneOf (a :| fa) = pure a <|> fa
 
 -- | Get the 'first' element of a non-empty container.
@@ -67,7 +67,7 @@ tail :: forall f a. NonEmpty f a -> f a
 tail (_ :| xs) = xs
 
 instance showNonEmpty :: (Show a, Show (f a)) => Show (NonEmpty f a) where
-  show (a :| fa) = "(NonEmpty " ++ show a ++ " " ++ show fa ++ ")"
+  show (a :| fa) = "(NonEmpty " <> show a <> " " <> show fa <> ")"
 
 instance eqNonEmpty :: (Eq a, Eq (f a)) => Eq (NonEmpty f a) where
   eq (a1 :| fa1) (a2 :| fa2) = a1 == a2 && fa1 == fa2
@@ -78,14 +78,14 @@ instance ordNonEmpty :: (Ord a, Ord (f a)) => Ord (NonEmpty f a) where
       EQ -> compare fa1 fa2
       other -> other
 
-instance functorNonEmpty :: (Functor f) => Functor (NonEmpty f) where
+instance functorNonEmpty :: Functor f => Functor (NonEmpty f) where
   map f (a :| fa) = f a :| map f fa
 
-instance foldableNonEmpty :: (Foldable f) => Foldable (NonEmpty f) where
+instance foldableNonEmpty :: Foldable f => Foldable (NonEmpty f) where
   foldMap f (a :| fa) = f a <> foldMap f fa
   foldl f b (a :| fa) = foldl f (f b a) fa
   foldr f b (a :| fa) = f a (foldr f b fa)
 
-instance traversableNonEmpty :: (Traversable f) => Traversable (NonEmpty f) where
+instance traversableNonEmpty :: Traversable f => Traversable (NonEmpty f) where
   sequence (a :| fa) = NonEmpty <$> a <*> sequence fa
   traverse f (a :| fa) = NonEmpty <$> f a <*> traverse f fa
