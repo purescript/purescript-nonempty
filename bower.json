@@ -16,10 +16,10 @@
     "url": "git://github.com/paf31/purescript-nonempty.git"
   },
   "dependencies": {
-    "purescript-foldable-traversable": "^1.0.0-rc.1"
+    "purescript-foldable-traversable": "^1.0.0"
   },
   "devDependencies": {
-    "purescript-console": "^1.0.0-rc.1",
-    "purescript-assert": "^1.0.0-rc.1"
+    "purescript-console": "^1.0.0",
+    "purescript-assert": "^1.0.0"
   }
 }
