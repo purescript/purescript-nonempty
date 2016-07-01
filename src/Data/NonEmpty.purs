@@ -21,6 +21,7 @@ import Control.Alternative (class Alternative)
 import Control.Plus (class Plus, empty)
 
 import Data.Foldable (class Foldable, foldl, foldr, foldMap)
+import Data.Generic (class Generic)
 import Data.Traversable (class Traversable, traverse, sequence)
 
 -- | A non-empty container of elements of type a.
@@ -77,6 +78,8 @@ instance ordNonEmpty :: (Ord a, Ord (f a)) => Ord (NonEmpty f a) where
     case compare a1 a2 of
       EQ -> compare fa1 fa2
       other -> other
+
+derive instance genericNonEmpty :: (Generic (f a), Generic a) => Generic (NonEmpty f a)
 
 instance functorNonEmpty :: Functor f => Functor (NonEmpty f) where
   map f (a :| fa) = f a :| map f fa
