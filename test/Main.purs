@@ -23,3 +23,4 @@ main = do
   assert $ fold ("Hello" :| [" ", "World"]) == "Hello World"
   assert $ oneOf (0 :| Nothing) == oneOf (0 :| Just 1)
   assert $ second (1 :| 2 :| [3, 4]) == 2
+  assert $ (1 :| [2, 3]) <> (4 :| [5,6]) == 1 :| [2, 3, 4, 5, 6]

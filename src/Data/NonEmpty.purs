@@ -94,4 +94,4 @@ instance traversableNonEmpty :: Traversable f => Traversable (NonEmpty f) where
   traverse f (a :| fa) = NonEmpty <$> f a <*> traverse f fa
 
 instance semigroupNonEmpty :: (Applicative f, Semigroup (f a)) => Semigroup (NonEmpty f a) where
-  append (NonEmpty a as) (NonEmpty b bs) = NonEmpty a (as <> pure b <> bs)
+  append (a :| fa) (b :| fb) = NonEmpty a (fa <> pure b <> fb)
