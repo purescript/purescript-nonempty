@@ -92,3 +92,6 @@ instance foldableNonEmpty :: Foldable f => Foldable (NonEmpty f) where
 instance traversableNonEmpty :: Traversable f => Traversable (NonEmpty f) where
   sequence (a :| fa) = NonEmpty <$> a <*> sequence fa
   traverse f (a :| fa) = NonEmpty <$> f a <*> traverse f fa
+
+instance semigroupNonEmpty :: (Applicative f, Semigroup (f a)) => Semigroup (NonEmpty f a) where
+  append (NonEmpty a as) (NonEmpty b bs) = NonEmpty a (as <> pure b <> bs)
