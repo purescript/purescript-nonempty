@@ -93,5 +93,5 @@ instance traversableNonEmpty :: Traversable f => Traversable (NonEmpty f) where
   sequence (a :| fa) = NonEmpty <$> a <*> sequence fa
   traverse f (a :| fa) = NonEmpty <$> f a <*> traverse f fa
 
-instance semigroupNonEmpty :: (Applicative f, Semigroup (f a)) => Semigroup (NonEmpty f a) where
-  append (a :| fa) (b :| fb) = NonEmpty a (fa <> pure b <> fb)
+instance semigroupNonEmpty :: Alternative f => Semigroup (NonEmpty f a) where
+  append (a :| fa) (b :| fb) = NonEmpty a (fa <|> pure b <|> fb)
