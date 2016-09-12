@@ -11,6 +11,7 @@
     "bower.json",
     "package.json"
   ],
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git://github.com/paf31/purescript-nonempty.git"
