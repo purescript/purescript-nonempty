@@ -18,6 +18,8 @@ import Prelude
 
 import Control.Alt ((<|>))
 import Control.Alternative (class Alternative)
+import Control.Comonad (class Comonad)
+import Control.Extend (class Extend)
 import Control.Plus (class Plus, empty)
 
 import Data.Foldable (class Foldable, foldl, foldr, foldMap)
@@ -83,6 +85,13 @@ derive instance genericNonEmpty :: (Generic (f a), Generic a) => Generic (NonEmp
 
 instance functorNonEmpty :: Functor f => Functor (NonEmpty f) where
   map f (a :| fa) = f a :| map f fa
+
+instance extendNonEmpty :: (Functor f, Plus f) => Extend (NonEmpty f) where
+  extend f (a :| fa) =
+    NonEmpty (f (NonEmpty a empty)) (map (\x -> f (NonEmpty x empty)) fa)
+
+instance comonadNonEmpty :: (Functor f, Plus f) => Comonad (NonEmpty f) where
+  extract (a :| _) = a
 
 instance foldableNonEmpty :: Foldable f => Foldable (NonEmpty f) where
   foldMap f (a :| fa) = f a <> foldMap f fa
