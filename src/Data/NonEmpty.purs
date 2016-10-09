@@ -1,6 +1,5 @@
--- | This module defines a generic non-empty data structure, which adds an additional
--- | element to any container type.
-
+-- | This module defines a generic non-empty data structure, which adds an
+-- | additional element to any container type.
 module Data.NonEmpty
   ( NonEmpty(..)
   , singleton
@@ -70,14 +69,9 @@ tail (_ :| xs) = xs
 instance showNonEmpty :: (Show a, Show (f a)) => Show (NonEmpty f a) where
   show (a :| fa) = "(NonEmpty " <> show a <> " " <> show fa <> ")"
 
-instance eqNonEmpty :: (Eq a, Eq (f a)) => Eq (NonEmpty f a) where
-  eq (a1 :| fa1) (a2 :| fa2) = a1 == a2 && fa1 == fa2
+derive instance eqNonEmpty :: (Eq a, Eq (f a)) => Eq (NonEmpty f a)
 
-instance ordNonEmpty :: (Ord a, Ord (f a)) => Ord (NonEmpty f a) where
-  compare (a1 :| fa1) (a2 :| fa2) =
-    case compare a1 a2 of
-      EQ -> compare fa1 fa2
-      other -> other
+derive instance ordNonEmpty :: (Ord a, Ord (f a)) => Ord (NonEmpty f a)
 
 derive instance genericNonEmpty :: (Generic (f a), Generic a) => Generic (NonEmpty f a)
 
