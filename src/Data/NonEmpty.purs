@@ -19,7 +19,9 @@ import Control.Alt ((<|>))
 import Control.Alternative (class Alternative)
 import Control.Plus (class Plus, empty)
 
+import Data.Eq (class Eq1, eq1)
 import Data.Foldable (class Foldable, foldl, foldr, foldMap)
+import Data.Ord (class Ord1, compare1)
 import Data.Traversable (class Traversable, traverse, sequence)
 
 -- | A non-empty container of elements of type a.
@@ -70,7 +72,16 @@ instance showNonEmpty :: (Show a, Show (f a)) => Show (NonEmpty f a) where
 
 derive instance eqNonEmpty :: (Eq a, Eq (f a)) => Eq (NonEmpty f a)
 
+instance eq1NonEmpty :: Eq1 f => Eq1 (NonEmpty f) where
+  eq1 (NonEmpty a fa) (NonEmpty b fb) = a == b && fa `eq1` fb
+
 derive instance ordNonEmpty :: (Ord a, Ord (f a)) => Ord (NonEmpty f a)
+
+instance ord1NonEmpty :: Ord1 f => Ord1 (NonEmpty f) where
+  compare1 (NonEmpty a fa) (NonEmpty b fb) =
+    case compare a b of
+      EQ -> compare1 fa fb
+      c -> c
 
 instance functorNonEmpty :: Functor f => Functor (NonEmpty f) where
   map f (a :| fa) = f a :| map f fa
