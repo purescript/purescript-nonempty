@@ -46,11 +46,11 @@ foldl1 :: forall f a. Foldable f => (a -> a -> a) -> NonEmpty f a -> a
 foldl1 f (a :| fa) = foldl f a fa
 
 -- | Fold a non-empty structure, collecting results in a `Semigroup`.
-foldMap1 :: forall f a s. (Semigroup s, Foldable f) => (a -> s) -> NonEmpty f a -> s
+foldMap1 :: forall f a s. Semigroup s => Foldable f => (a -> s) -> NonEmpty f a -> s
 foldMap1 f (a :| fa) = foldl (\s a1 -> s <> f a1) (f a) fa
 
 -- | Fold a non-empty structure.
-fold1 :: forall f s. (Semigroup s, Foldable f) => NonEmpty f s -> s
+fold1 :: forall f s. Semigroup s => Foldable f => NonEmpty f s -> s
 fold1 = foldMap1 id
 
 fromNonEmpty :: forall f a r. (a -> f a -> r) -> NonEmpty f a -> r
