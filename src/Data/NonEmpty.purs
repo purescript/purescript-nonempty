@@ -46,11 +46,11 @@ foldl1 :: forall f a. Foldable f => (a -> a -> a) -> NonEmpty f a -> a
 foldl1 f (a :| fa) = foldl f a fa
 
 -- | Fold a non-empty structure, collecting results in a `Semigroup`.
-foldMap1 :: forall f a s. (Semigroup s, Foldable f) => (a -> s) -> NonEmpty f a -> s
+foldMap1 :: forall f a s. Semigroup s => Foldable f => (a -> s) -> NonEmpty f a -> s
 foldMap1 f (a :| fa) = foldl (\s a1 -> s <> f a1) (f a) fa
 
 -- | Fold a non-empty structure.
-fold1 :: forall f s. (Semigroup s, Foldable f) => NonEmpty f s -> s
+fold1 :: forall f s. Semigroup s => Foldable f => NonEmpty f s -> s
 fold1 = foldMap1 id
 
 fromNonEmpty :: forall f a r. (a -> f a -> r) -> NonEmpty f a -> r
@@ -70,12 +70,14 @@ tail (_ :| xs) = xs
 instance showNonEmpty :: (Show a, Show (f a)) => Show (NonEmpty f a) where
   show (a :| fa) = "(NonEmpty " <> show a <> " " <> show fa <> ")"
 
-derive instance eqNonEmpty :: (Eq a, Eq (f a)) => Eq (NonEmpty f a)
+instance eqNonEmpty :: (Eq1 f, Eq a) => Eq (NonEmpty f a) where
+  eq = eq1
 
 instance eq1NonEmpty :: Eq1 f => Eq1 (NonEmpty f) where
   eq1 (NonEmpty a fa) (NonEmpty b fb) = a == b && fa `eq1` fb
 
-derive instance ordNonEmpty :: (Ord a, Ord (f a)) => Ord (NonEmpty f a)
+instance ordNonEmpty :: (Ord1 f, Ord a) => Ord (NonEmpty f a) where
+  compare = compare1
 
 instance ord1NonEmpty :: Ord1 f => Ord1 (NonEmpty f) where
   compare1 (NonEmpty a fa) (NonEmpty b fb) =
