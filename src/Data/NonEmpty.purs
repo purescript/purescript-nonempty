@@ -70,12 +70,14 @@ tail (_ :| xs) = xs
 instance showNonEmpty :: (Show a, Show (f a)) => Show (NonEmpty f a) where
   show (a :| fa) = "(NonEmpty " <> show a <> " " <> show fa <> ")"
 
-derive instance eqNonEmpty :: (Eq a, Eq (f a)) => Eq (NonEmpty f a)
+instance eqNonEmpty :: (Eq1 f, Eq a) => Eq (NonEmpty f a) where
+  eq = eq1
 
 instance eq1NonEmpty :: Eq1 f => Eq1 (NonEmpty f) where
   eq1 (NonEmpty a fa) (NonEmpty b fb) = a == b && fa `eq1` fb
 
-derive instance ordNonEmpty :: (Ord a, Ord (f a)) => Ord (NonEmpty f a)
+instance ordNonEmpty :: (Ord1 f, Ord a) => Ord (NonEmpty f a) where
+  compare = compare1
 
 instance ord1NonEmpty :: Ord1 f => Ord1 (NonEmpty f) where
   compare1 (NonEmpty a fa) (NonEmpty b fb) =
