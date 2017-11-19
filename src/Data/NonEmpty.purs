@@ -24,6 +24,7 @@ import Data.FoldableWithIndex (class FoldableWithIndex, foldMapWithIndex, foldlW
 import Data.FunctorWithIndex (class FunctorWithIndex, mapWithIndex)
 import Data.Ord (class Ord1, compare1)
 import Data.Traversable (class Traversable, traverse, sequence)
+import Data.TraversableWithIndex (class TraversableWithIndex, traverseWithIndex)
 
 -- | A non-empty container of elements of type a.
 -- |
@@ -113,3 +114,9 @@ instance foldableWithIndexNonEmpty
 instance traversableNonEmpty :: Traversable f => Traversable (NonEmpty f) where
   sequence (a :| fa) = NonEmpty <$> a <*> sequence fa
   traverse f (a :| fa) = NonEmpty <$> f a <*> traverse f fa
+
+instance traversableWithIndexNonEmpty
+  :: (TraversableWithIndex i f, Semiring i)
+  => TraversableWithIndex i (NonEmpty f) where
+  traverseWithIndex f (a :| fa) =
+    NonEmpty <$> f zero a <*> traverseWithIndex (incIndex f) fa
