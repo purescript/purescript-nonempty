@@ -20,6 +20,7 @@ import Control.Alternative (class Alternative)
 import Control.Plus (class Plus, empty)
 import Data.Eq (class Eq1, eq1)
 import Data.Foldable (class Foldable, foldl, foldr, foldMap)
+import Data.FoldableWithIndex (class FoldableWithIndex, foldMapWithIndex, foldlWithIndex, foldrWithIndex)
 import Data.FunctorWithIndex (class FunctorWithIndex, mapWithIndex)
 import Data.Ord (class Ord1, compare1)
 import Data.Traversable (class Traversable, traverse, sequence)
@@ -88,15 +89,26 @@ instance ord1NonEmpty :: Ord1 f => Ord1 (NonEmpty f) where
 instance functorNonEmpty :: Functor f => Functor (NonEmpty f) where
   map f (a :| fa) = f a :| map f fa
 
+-- | A utility function for indexed instances. Increments the index parameter.
+incIndex :: forall a i. Semiring i => (i -> a) -> (i -> a)
+incIndex f i = f $ add one i
+
 instance functorWithIndex
   :: (FunctorWithIndex i f, Semiring i)
   => FunctorWithIndex i (NonEmpty f) where
-  mapWithIndex f (a :| fa) = f zero a :| mapWithIndex (\i -> f $ add one i) fa
+  mapWithIndex f (a :| fa) = f zero a :| mapWithIndex (incIndex f) fa
 
 instance foldableNonEmpty :: Foldable f => Foldable (NonEmpty f) where
   foldMap f (a :| fa) = f a <> foldMap f fa
   foldl f b (a :| fa) = foldl f (f b a) fa
   foldr f b (a :| fa) = f a (foldr f b fa)
+
+instance foldableWithIndexNonEmpty
+  :: (FoldableWithIndex i f, Semiring i)
+  => FoldableWithIndex i (NonEmpty f) where
+  foldMapWithIndex f (a :| fa) = f zero a <> foldMapWithIndex (incIndex f) fa
+  foldlWithIndex f b (a :| fa) = foldlWithIndex (incIndex f) (f zero b a) fa
+  foldrWithIndex f b (a :| fa) = f zero a (foldrWithIndex (incIndex f) b fa)
 
 instance traversableNonEmpty :: Traversable f => Traversable (NonEmpty f) where
   sequence (a :| fa) = NonEmpty <$> a <*> sequence fa
