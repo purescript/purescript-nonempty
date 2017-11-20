@@ -22,6 +22,7 @@ import Data.Eq (class Eq1, eq1)
 import Data.Foldable (class Foldable, foldl, foldr, foldMap)
 import Data.FoldableWithIndex (class FoldableWithIndex, foldMapWithIndex, foldlWithIndex, foldrWithIndex)
 import Data.FunctorWithIndex (class FunctorWithIndex, mapWithIndex)
+import Data.Maybe (Maybe(..))
 import Data.Ord (class Ord1, compare1)
 import Data.Traversable (class Traversable, traverse, sequence)
 import Data.TraversableWithIndex (class TraversableWithIndex, traverseWithIndex)
@@ -90,14 +91,10 @@ instance ord1NonEmpty :: Ord1 f => Ord1 (NonEmpty f) where
 instance functorNonEmpty :: Functor f => Functor (NonEmpty f) where
   map f (a :| fa) = f a :| map f fa
 
--- | A utility function for indexed instances. Increments the index parameter.
-incIndex :: forall a i. Semiring i => (i -> a) -> (i -> a)
-incIndex f i = f $ add one i
-
 instance functorWithIndex
-  :: (FunctorWithIndex i f, Semiring i)
-  => FunctorWithIndex i (NonEmpty f) where
-  mapWithIndex f (a :| fa) = f zero a :| mapWithIndex (incIndex f) fa
+  :: FunctorWithIndex i f
+  => FunctorWithIndex (Maybe i) (NonEmpty f) where
+  mapWithIndex f (a :| fa) = f Nothing a :| mapWithIndex (f <<< Just) fa
 
 instance foldableNonEmpty :: Foldable f => Foldable (NonEmpty f) where
   foldMap f (a :| fa) = f a <> foldMap f fa
@@ -105,18 +102,18 @@ instance foldableNonEmpty :: Foldable f => Foldable (NonEmpty f) where
   foldr f b (a :| fa) = f a (foldr f b fa)
 
 instance foldableWithIndexNonEmpty
-  :: (FoldableWithIndex i f, Semiring i)
-  => FoldableWithIndex i (NonEmpty f) where
-  foldMapWithIndex f (a :| fa) = f zero a <> foldMapWithIndex (incIndex f) fa
-  foldlWithIndex f b (a :| fa) = foldlWithIndex (incIndex f) (f zero b a) fa
-  foldrWithIndex f b (a :| fa) = f zero a (foldrWithIndex (incIndex f) b fa)
+  :: (FoldableWithIndex i f)
+  => FoldableWithIndex (Maybe i) (NonEmpty f) where
+  foldMapWithIndex f (a :| fa) = f Nothing a <> foldMapWithIndex (f <<< Just) fa
+  foldlWithIndex f b (a :| fa) = foldlWithIndex (f <<< Just) (f Nothing b a) fa
+  foldrWithIndex f b (a :| fa) = f Nothing a (foldrWithIndex (f <<< Just) b fa)
 
 instance traversableNonEmpty :: Traversable f => Traversable (NonEmpty f) where
   sequence (a :| fa) = NonEmpty <$> a <*> sequence fa
   traverse f (a :| fa) = NonEmpty <$> f a <*> traverse f fa
 
 instance traversableWithIndexNonEmpty
-  :: (TraversableWithIndex i f, Semiring i)
-  => TraversableWithIndex i (NonEmpty f) where
+  :: (TraversableWithIndex i f)
+  => TraversableWithIndex (Maybe i) (NonEmpty f) where
   traverseWithIndex f (a :| fa) =
-    NonEmpty <$> f zero a <*> traverseWithIndex (incIndex f) fa
+    NonEmpty <$> f Nothing a <*> traverseWithIndex (f <<< Just) fa
