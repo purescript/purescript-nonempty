@@ -18,11 +18,14 @@ import Prelude
 import Control.Alt ((<|>))
 import Control.Alternative (class Alternative)
 import Control.Plus (class Plus, empty)
-
 import Data.Eq (class Eq1, eq1)
 import Data.Foldable (class Foldable, foldl, foldr, foldMap)
+import Data.FoldableWithIndex (class FoldableWithIndex, foldMapWithIndex, foldlWithIndex, foldrWithIndex)
+import Data.FunctorWithIndex (class FunctorWithIndex, mapWithIndex)
+import Data.Maybe (Maybe(..))
 import Data.Ord (class Ord1, compare1)
 import Data.Traversable (class Traversable, traverse, sequence)
+import Data.TraversableWithIndex (class TraversableWithIndex, traverseWithIndex)
 
 -- | A non-empty container of elements of type a.
 -- |
@@ -88,11 +91,29 @@ instance ord1NonEmpty :: Ord1 f => Ord1 (NonEmpty f) where
 instance functorNonEmpty :: Functor f => Functor (NonEmpty f) where
   map f (a :| fa) = f a :| map f fa
 
+instance functorWithIndex
+  :: FunctorWithIndex i f
+  => FunctorWithIndex (Maybe i) (NonEmpty f) where
+  mapWithIndex f (a :| fa) = f Nothing a :| mapWithIndex (f <<< Just) fa
+
 instance foldableNonEmpty :: Foldable f => Foldable (NonEmpty f) where
   foldMap f (a :| fa) = f a <> foldMap f fa
   foldl f b (a :| fa) = foldl f (f b a) fa
   foldr f b (a :| fa) = f a (foldr f b fa)
 
+instance foldableWithIndexNonEmpty
+  :: (FoldableWithIndex i f)
+  => FoldableWithIndex (Maybe i) (NonEmpty f) where
+  foldMapWithIndex f (a :| fa) = f Nothing a <> foldMapWithIndex (f <<< Just) fa
+  foldlWithIndex f b (a :| fa) = foldlWithIndex (f <<< Just) (f Nothing b a) fa
+  foldrWithIndex f b (a :| fa) = f Nothing a (foldrWithIndex (f <<< Just) b fa)
+
 instance traversableNonEmpty :: Traversable f => Traversable (NonEmpty f) where
   sequence (a :| fa) = NonEmpty <$> a <*> sequence fa
   traverse f (a :| fa) = NonEmpty <$> f a <*> traverse f fa
+
+instance traversableWithIndexNonEmpty
+  :: (TraversableWithIndex i f)
+  => TraversableWithIndex (Maybe i) (NonEmpty f) where
+  traverseWithIndex f (a :| fa) =
+    NonEmpty <$> f Nothing a <*> traverseWithIndex (f <<< Just) fa
