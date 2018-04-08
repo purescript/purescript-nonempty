@@ -71,6 +71,9 @@ head (x :| _) = x
 tail :: forall f a. NonEmpty f a -> f a
 tail (_ :| xs) = xs
 
+hmap :: forall f g. (f ~> g) -> NonEmpty f ~> NonEmpty g
+hmap f (a :| as) = (a :| f as)
+
 instance showNonEmpty :: (Show a, Show (f a)) => Show (NonEmpty f a) where
   show (a :| fa) = "(NonEmpty " <> show a <> " " <> show fa <> ")"
 
