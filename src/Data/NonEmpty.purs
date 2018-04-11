@@ -27,6 +27,7 @@ import Data.Ord (class Ord1, compare1)
 import Data.Semigroup.Foldable as F1
 import Data.Traversable (class Traversable, traverse, sequence)
 import Data.TraversableWithIndex (class TraversableWithIndex, traverseWithIndex)
+import Prelude as Prelude
 
 -- | A non-empty container of elements of type a.
 -- |
@@ -71,6 +72,11 @@ head (x :| _) = x
 tail :: forall f a. NonEmpty f a -> f a
 tail (_ :| xs) = xs
 
+-- | Useful for functorish non-functors like `Set`.
+-- > NonEmpty.map Set.map (_ + 1)
+map :: forall a b f. ((a -> b) -> f a -> f b) -> (a -> b) -> NonEmpty f a -> NonEmpty f b
+map mapper f (a :| as) = (f a :| mapper f as)
+
 instance showNonEmpty :: (Show a, Show (f a)) => Show (NonEmpty f a) where
   show (a :| fa) = "(NonEmpty " <> show a <> " " <> show fa <> ")"
 
@@ -90,7 +96,7 @@ instance ord1NonEmpty :: Ord1 f => Ord1 (NonEmpty f) where
       c -> c
 
 instance functorNonEmpty :: Functor f => Functor (NonEmpty f) where
-  map f (a :| fa) = f a :| map f fa
+  map f (a :| fa) = f a :| Prelude.map f fa
 
 instance functorWithIndex
   :: FunctorWithIndex i f
