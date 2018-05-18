@@ -6,6 +6,7 @@ import Data.Foldable (fold, foldl)
 import Data.Maybe (Maybe(..))
 import Data.NonEmpty (NonEmpty, (:|), foldl1, oneOf, head, tail, singleton)
 import Data.Semigroup.Foldable (fold1)
+import Data.Unfoldable1 as U1
 import Effect (Effect)
 import Test.Assert (assert)
 
@@ -24,3 +25,4 @@ main = do
   assert $ fold ("Hello" :| [" ", "World"]) == "Hello World"
   assert $ oneOf (0 :| Nothing) == oneOf (0 :| Just 1)
   assert $ second (1 :| 2 :| [3, 4]) == 2
+  assert $ U1.range 0 9 == (0 :| [1, 2, 3, 4, 5, 6, 7, 8, 9])

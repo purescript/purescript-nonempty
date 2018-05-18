@@ -25,6 +25,9 @@ import Data.Ord (class Ord1)
 import Data.Semigroup.Foldable (class Foldable1, foldMap1)
 import Data.Traversable (class Traversable, traverse, sequence)
 import Data.TraversableWithIndex (class TraversableWithIndex, traverseWithIndex)
+import Data.Tuple (uncurry)
+import Data.Unfoldable (class Unfoldable, unfoldr)
+import Data.Unfoldable1 (class Unfoldable1)
 
 -- | A non-empty container of elements of type a.
 -- |
@@ -104,3 +107,6 @@ instance traversableWithIndexNonEmpty
 instance foldable1NonEmpty :: Foldable f => Foldable1 (NonEmpty f) where
   fold1 = foldMap1 identity
   foldMap1 f (a :| fa) = foldl (\s a1 -> s <> f a1) (f a) fa
+
+instance unfoldable1NonEmpty :: Unfoldable f => Unfoldable1 (NonEmpty f) where
+  unfoldr1 f b = uncurry (:|) $ unfoldr (map f) <$> f b
