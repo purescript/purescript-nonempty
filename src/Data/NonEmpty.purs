@@ -5,8 +5,6 @@ module Data.NonEmpty
   , singleton
   , (:|)
   , foldl1
-  , foldMap1
-  , fold1
   , fromNonEmpty
   , oneOf
   , head
@@ -18,13 +16,13 @@ import Prelude
 import Control.Alt ((<|>))
 import Control.Alternative (class Alternative)
 import Control.Plus (class Plus, empty)
-import Data.Eq (class Eq1, eq1)
+import Data.Eq (class Eq1)
 import Data.Foldable (class Foldable, foldl, foldr, foldMap)
 import Data.FoldableWithIndex (class FoldableWithIndex, foldMapWithIndex, foldlWithIndex, foldrWithIndex)
 import Data.FunctorWithIndex (class FunctorWithIndex, mapWithIndex)
 import Data.Maybe (Maybe(..))
-import Data.Ord (class Ord1, compare1)
-import Data.Semigroup.Foldable as F1
+import Data.Ord (class Ord1)
+import Data.Semigroup.Foldable (class Foldable1, foldMap1)
 import Data.Traversable (class Traversable, traverse, sequence)
 import Data.TraversableWithIndex (class TraversableWithIndex, traverseWithIndex)
 import Data.Tuple (uncurry)
@@ -52,14 +50,6 @@ singleton a = a :| empty
 foldl1 :: forall f a. Foldable f => (a -> a -> a) -> NonEmpty f a -> a
 foldl1 f (a :| fa) = foldl f a fa
 
--- | Fold a non-empty structure, collecting results in a `Semigroup`.
-foldMap1 :: forall f a s. Semigroup s => Foldable f => (a -> s) -> NonEmpty f a -> s
-foldMap1 = F1.foldMap1
-
--- | Fold a non-empty structure.
-fold1 :: forall f s. Semigroup s => Foldable f => NonEmpty f s -> s
-fold1 = F1.fold1
-
 fromNonEmpty :: forall f a r. (a -> f a -> r) -> NonEmpty f a -> r
 fromNonEmpty f (a :| fa) = a `f` fa
 
@@ -77,23 +67,15 @@ tail (_ :| xs) = xs
 instance showNonEmpty :: (Show a, Show (f a)) => Show (NonEmpty f a) where
   show (a :| fa) = "(NonEmpty " <> show a <> " " <> show fa <> ")"
 
-instance eqNonEmpty :: (Eq1 f, Eq a) => Eq (NonEmpty f a) where
-  eq = eq1
+derive instance eqNonEmpty :: (Eq1 f, Eq a) => Eq (NonEmpty f a)
 
-instance eq1NonEmpty :: Eq1 f => Eq1 (NonEmpty f) where
-  eq1 (NonEmpty a fa) (NonEmpty b fb) = a == b && fa `eq1` fb
+derive instance eq1NonEmpty :: Eq1 f => Eq1 (NonEmpty f)
 
-instance ordNonEmpty :: (Ord1 f, Ord a) => Ord (NonEmpty f a) where
-  compare = compare1
+derive instance ordNonEmpty :: (Ord1 f, Ord a) => Ord (NonEmpty f a)
 
-instance ord1NonEmpty :: Ord1 f => Ord1 (NonEmpty f) where
-  compare1 (NonEmpty a fa) (NonEmpty b fb) =
-    case compare a b of
-      EQ -> compare1 fa fb
-      c -> c
+derive instance ord1NonEmpty :: Ord1 f => Ord1 (NonEmpty f)
 
-instance functorNonEmpty :: Functor f => Functor (NonEmpty f) where
-  map f (a :| fa) = f a :| map f fa
+derive instance functorNonEmpty :: Functor f => Functor (NonEmpty f)
 
 instance functorWithIndex
   :: FunctorWithIndex i f
@@ -122,8 +104,8 @@ instance traversableWithIndexNonEmpty
   traverseWithIndex f (a :| fa) =
     NonEmpty <$> f Nothing a <*> traverseWithIndex (f <<< Just) fa
 
-instance foldable1NonEmpty :: Foldable f => F1.Foldable1 (NonEmpty f) where
-  fold1 = foldMap1 id
+instance foldable1NonEmpty :: Foldable f => Foldable1 (NonEmpty f) where
+  fold1 = foldMap1 identity
   foldMap1 f (a :| fa) = foldl (\s a1 -> s <> f a1) (f a) fa
 
 instance unfoldable1NonEmpty :: Unfoldable f => Unfoldable1 (NonEmpty f) where

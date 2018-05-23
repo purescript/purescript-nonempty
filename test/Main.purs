@@ -2,19 +2,20 @@ module Test.Main where
 
 import Prelude
 
-import Control.Monad.Eff (Eff)
 import Data.Foldable (fold, foldl)
 import Data.Maybe (Maybe(..))
-import Data.NonEmpty (NonEmpty(), (:|), fold1, foldl1, oneOf, head, tail, singleton)
+import Data.NonEmpty (NonEmpty, (:|), foldl1, oneOf, head, tail, singleton)
+import Data.Semigroup.Foldable (fold1)
 import Data.Unfoldable1 as U1
-import Test.Assert (ASSERT, assert)
+import Effect (Effect)
+import Test.Assert (assert)
 
 type AtLeastTwo f a = NonEmpty (NonEmpty f) a
 
 second :: forall f a. AtLeastTwo f a -> a
 second = tail >>> head
 
-main :: Eff (assert :: ASSERT) Unit
+main :: Effect Unit
 main = do
   assert $ singleton 0 == 0 :| []
   assert $ 0 :| Nothing /= 0 :| Just 1
