@@ -110,3 +110,8 @@ instance foldable1NonEmpty :: Foldable f => Foldable1 (NonEmpty f) where
 
 instance unfoldable1NonEmpty :: Unfoldable f => Unfoldable1 (NonEmpty f) where
   unfoldr1 f b = uncurry (:|) $ unfoldr (map f) <$> f b
+
+instance semigroupNonEmpty
+  :: (Applicative f, Semigroup (f a))
+  => Semigroup (NonEmpty f a) where
+  append (a1 :| f1) (a2 :| f2) = a1 :| (f1 <> pure a2 <> f2)
