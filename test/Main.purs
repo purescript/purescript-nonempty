@@ -5,7 +5,7 @@ import Prelude
 import Data.Foldable (fold, foldl)
 import Data.Maybe (Maybe(..))
 import Data.NonEmpty (NonEmpty, (:|), foldl1, oneOf, head, tail, singleton)
-import Data.Semigroup.Foldable (fold1)
+import Data.Semigroup.Foldable (fold1, foldr1)
 import Data.Unfoldable1 as U1
 import Effect (Effect)
 import Test.Assert (assert)
@@ -19,7 +19,8 @@ main :: Effect Unit
 main = do
   assert $ singleton 0 == 0 :| []
   assert $ 0 :| Nothing /= 0 :| Just 1
-  assert $ foldl1 (+) (1 :| [2, 3]) == 6
+  assert $ foldl1 (\l r -> "(" <> l <> r <> ")") ("a" :| ["b", "c", "d"]) == "(((ab)c)d)"
+  assert $ foldr1 (\l r -> "(" <> l <> r <> ")") ("a" :| ["b", "c", "d"]) == "(a(b(cd)))"
   assert $ foldl (+) 0 (1 :| [2, 3]) == 6
   assert $ fold1 ("Hello" :| [" ", "World"]) == "Hello World"
   assert $ fold ("Hello" :| [" ", "World"]) == "Hello World"

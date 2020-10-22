@@ -4,11 +4,11 @@ module Data.NonEmpty
   ( NonEmpty(..)
   , singleton
   , (:|)
-  , foldl1
   , fromNonEmpty
   , oneOf
   , head
   , tail
+  , module Exports
   ) where
 
 import Prelude
@@ -20,9 +20,10 @@ import Data.Eq (class Eq1)
 import Data.Foldable (class Foldable, foldl, foldr, foldMap)
 import Data.FoldableWithIndex (class FoldableWithIndex, foldMapWithIndex, foldlWithIndex, foldrWithIndex)
 import Data.FunctorWithIndex (class FunctorWithIndex, mapWithIndex)
-import Data.Maybe (Maybe(..))
+import Data.Maybe (Maybe(..), maybe)
 import Data.Ord (class Ord1)
 import Data.Semigroup.Foldable (class Foldable1, foldMap1)
+import Data.Semigroup.Foldable (foldl1) as Exports
 import Data.Traversable (class Traversable, traverse, sequence)
 import Data.TraversableWithIndex (class TraversableWithIndex, traverseWithIndex)
 import Data.Tuple (uncurry)
@@ -45,10 +46,6 @@ infixr 5 NonEmpty as :|
 -- | Create a non-empty structure with a single value.
 singleton :: forall f a. Plus f => a -> NonEmpty f a
 singleton a = a :| empty
-
--- | Fold a non-empty structure, collecting results using a binary operation.
-foldl1 :: forall f a. Foldable f => (a -> a -> a) -> NonEmpty f a -> a
-foldl1 f (a :| fa) = foldl f a fa
 
 fromNonEmpty :: forall f a r. (a -> f a -> r) -> NonEmpty f a -> r
 fromNonEmpty f (a :| fa) = a `f` fa
@@ -107,6 +104,8 @@ instance traversableWithIndexNonEmpty
 instance foldable1NonEmpty :: Foldable f => Foldable1 (NonEmpty f) where
   fold1 = foldMap1 identity
   foldMap1 f (a :| fa) = foldl (\s a1 -> s <> f a1) (f a) fa
+  foldr1 f (a :| fa) = maybe a (f a) $ foldr (\a1 -> Just <<< maybe a1 (f a1)) Nothing fa
+  foldl1 f (a :| fa) = foldl f a fa
 
 instance unfoldable1NonEmpty :: Unfoldable f => Unfoldable1 (NonEmpty f) where
   unfoldr1 f b = uncurry (:|) $ unfoldr (map f) <$> f b
