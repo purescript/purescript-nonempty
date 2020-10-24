@@ -20,7 +20,7 @@ import Data.Eq (class Eq1)
 import Data.Foldable (class Foldable, foldl, foldr, foldMap)
 import Data.FoldableWithIndex (class FoldableWithIndex, foldMapWithIndex, foldlWithIndex, foldrWithIndex)
 import Data.FunctorWithIndex (class FunctorWithIndex, mapWithIndex)
-import Data.Maybe (Maybe(..))
+import Data.Maybe (Maybe(..), maybe)
 import Data.Ord (class Ord1)
 import Data.Semigroup.Foldable (class Foldable1, foldMap1)
 import Data.Traversable (class Traversable, traverse, sequence)
@@ -107,6 +107,8 @@ instance traversableWithIndexNonEmpty
 instance foldable1NonEmpty :: Foldable f => Foldable1 (NonEmpty f) where
   fold1 = foldMap1 identity
   foldMap1 f (a :| fa) = foldl (\s a1 -> s <> f a1) (f a) fa
+  foldr1 f (a :| fa) = maybe a (f a) $ foldr (\a1 -> Just <<< maybe a1 (f a1)) Nothing fa
+  foldl1 = foldl1
 
 instance unfoldable1NonEmpty :: Unfoldable f => Unfoldable1 (NonEmpty f) where
   unfoldr1 f b = uncurry (:|) $ unfoldr (map f) <$> f b
