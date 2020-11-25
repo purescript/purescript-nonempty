@@ -49,7 +49,7 @@ singleton :: forall f a. Plus f => a -> NonEmpty f a
 singleton a = a :| empty
 
 -- | Fold a non-empty structure, collecting results using a binary operation.
-foldl1 :: forall f a. Foldable f => Warn (Text "'foldl1' is deprecated") => (a -> a -> a) -> NonEmpty f a -> a
+foldl1 :: forall f a. Foldable f => Warn (Text "'Data.NonEmpty.foldl1' is deprecated, use 'Data.Semigroup.Foldable.foldl1' instead") => (a -> a -> a) -> NonEmpty f a -> a
 foldl1 = Foldable1.foldl1
 
 fromNonEmpty :: forall f a r. (a -> f a -> r) -> NonEmpty f a -> r
