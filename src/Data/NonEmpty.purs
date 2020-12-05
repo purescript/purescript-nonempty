@@ -31,8 +31,6 @@ import Data.Unfoldable1 (class Unfoldable1)
 
 -- | A non-empty container of elements of type a.
 -- |
--- | For example:
--- |
 -- | ```purescript
 -- | import Data.NonEmpty
 -- |
@@ -48,8 +46,6 @@ data NonEmpty f a = NonEmpty a (f a)
 
 -- | An infix synonym for `NonEmpty`.
 -- |
--- | For example:
--- |
 -- | ```purescript
 -- | nonEmptyArray :: NonEmpty Array Int
 -- | nonEmptyArray = 1 :| [2,3]
@@ -61,8 +57,6 @@ infixr 5 NonEmpty as :|
 
 -- | Create a non-empty structure with a single value.
 -- |
--- | For example:
--- |
 -- | ```purescript
 -- | import Prelude
 -- |
@@ -73,8 +67,6 @@ singleton :: forall f a. Plus f => a -> NonEmpty f a
 singleton a = a :| empty
 
 -- | Fold a non-empty structure, collecting results using a binary operation.
--- |
--- | For example:
 -- |
 -- | ```purescript
 -- | foldl1 (+) (1 :| [2, 3]) == 6
@@ -97,8 +89,6 @@ fromNonEmpty f (a :| fa) = a `f` fa
 -- | - The first element lifted to the container of the remaining elements.
 -- | - The remaining elements.
 -- |
--- | For example:
--- |
 -- | ```purescript
 -- | import Data.Maybe(Maybe(..))
 -- |
@@ -112,8 +102,6 @@ oneOf (a :| fa) = pure a <|> fa
 
 -- | Get the 'first' element of a non-empty container.
 -- |
--- | For example:
--- |
 -- | ```purescript
 -- | head (1 :| [2, 3]) == 1
 -- | ```
@@ -121,8 +109,6 @@ head :: forall f a. NonEmpty f a -> a
 head (x :| _) = x
 
 -- | Get everything but the 'first' element of a non-empty container.
--- |
--- | For example:
 -- |
 -- | ```purescript
 -- | tail (1 :| [2, 3]) == [2, 3]
