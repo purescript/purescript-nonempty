@@ -4,8 +4,8 @@ import Prelude
 
 import Data.Foldable (fold, foldl)
 import Data.Maybe (Maybe(..))
-import Data.NonEmpty (NonEmpty, (:|), foldl1, oneOf, head, tail, singleton)
-import Data.Semigroup.Foldable (fold1, foldr1)
+import Data.NonEmpty (NonEmpty, (:|), oneOf, head, tail, singleton)
+import Data.Semigroup.Foldable (fold1, foldl1, foldr1)
 import Data.Unfoldable1 as U1
 import Effect (Effect)
 import Test.Assert (assert)
