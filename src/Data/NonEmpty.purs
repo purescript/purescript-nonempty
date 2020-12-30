@@ -29,7 +29,6 @@ import Data.TraversableWithIndex (class TraversableWithIndex, traverseWithIndex)
 import Data.Tuple (uncurry)
 import Data.Unfoldable (class Unfoldable, unfoldr)
 import Data.Unfoldable1 (class Unfoldable1)
-import Prim.TypeError (class Warn, Text)
 
 -- | A non-empty container of elements of type a.
 -- |
@@ -70,12 +69,10 @@ singleton a = a :| empty
 
 -- | Fold a non-empty structure, collecting results using a binary operation.
 -- |
--- | Deprecated, use 'Data.Semigroup.Foldable.foldl1' instead
--- |
 -- | ```purescript
 -- | foldl1 (+) (1 :| [2, 3]) == 6
 -- | ```
-foldl1 :: forall f a. Foldable f => Warn (Text "'Data.NonEmpty.foldl1' is deprecated, use 'Data.Semigroup.Foldable.foldl1' instead") => (a -> a -> a) -> NonEmpty f a -> a
+foldl1 :: forall f a. Foldable f => (a -> a -> a) -> NonEmpty f a -> a
 foldl1 = Foldable1.foldl1
 
 -- | Apply a function that takes the `first` element and remaining elements
