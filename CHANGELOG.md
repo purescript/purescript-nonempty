@@ -5,17 +5,23 @@ Notable changes to this project are documented in this file. The format is based
 ## [Unreleased]
 
 Breaking changes:
+- Added support for PureScript 0.14 and dropped support for all previous versions (#38, #44)
 
 New features:
 
 Bugfixes:
 
 Other improvements:
+- Fixed `Foldable1 (NonEmpty f)` instance, as `Foldable1` now has `foldr1` and `foldl1` as members (#39)
+- Deprecated monomorphic `foldl1`, suggesting the polymorphic `foldl1` from `Data.Semigroup.Foldable` instead (#42)
+- Added examples (#36)
+- Migrated CI to GitHub Actions and updated installation instructions to use Spago (#43)
+- Added a changelog and pull request template (#46)
 
 ## [v5.0.0](https://github.com/purescript/purescript-nonempty/releases/tag/v5.0.0) - 2018-05-23
 
 - Updated for PureScript 0.12
-- Monomorphic versions of `Foldable1` functions have been removed
+- Removed monomorphic versions of `Foldable1` functions
 
 ## [v4.3.0](https://github.com/purescript/purescript-nonempty/releases/tag/v4.3.0) - 2018-05-13
 
@@ -31,7 +37,7 @@ Other improvements:
 
 ## [v4.1.0](https://github.com/purescript/purescript-nonempty/releases/tag/v4.1.0) - 2017-11-21
 
-`FunctorWithIndex`, `FoldableWithIndex`, `TraversableWithIndex` instances (@matthewleon, @safareli)
+- Added `FunctorWithIndex`, `FoldableWithIndex`, `TraversableWithIndex` instances (@matthewleon, @safareli)
 
 ## [v4.0.0](https://github.com/purescript/purescript-nonempty/releases/tag/v4.0.0) - 2017-03-26
 
@@ -51,29 +57,28 @@ Other improvements:
 
 ## [v1.0.0](https://github.com/purescript/purescript-nonempty/releases/tag/v1.0.0) - 2016-06-02
 
-Updates for 1.0 core libraries
+- Updated for 1.0 core libraries
 
 ## [v0.2.0](https://github.com/purescript/purescript-nonempty/releases/tag/v0.2.0) - 2016-01-31
 
-Updates for 0.8.0 (@sharkdp)
+- Updated for 0.8.0 (@sharkdp)
 
 ## [v0.1.4](https://github.com/purescript/purescript-nonempty/releases/tag/v0.1.4) - 2016-01-31
 
-Add `head` and `tail` (@sharkdp)
+- Added `head` and `tail` (@sharkdp)
 
 ## [v0.1.3](https://github.com/purescript/purescript-nonempty/releases/tag/v0.1.3) - 2016-01-14
 
-Remove unused type var (@jonsterling)
+- Removed unused type var (@jonsterling)
 
 ## [v0.1.2](https://github.com/purescript/purescript-nonempty/releases/tag/v0.1.2) - 2015-07-23
 
-Add `singleton` (@garyb)
+- Added `singleton` (@garyb)
 
 ## [v0.1.1](https://github.com/purescript/purescript-nonempty/releases/tag/v0.1.1) - 2015-07-13
 
-
+- Added `fromNonEmpty` operation (#1)
 
 ## [v0.1.0](https://github.com/purescript/purescript-nonempty/releases/tag/v0.1.0) - 2015-07-07
 
-Initial versioned release
-
+- Initial versioned release
