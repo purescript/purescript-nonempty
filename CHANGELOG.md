@@ -7,11 +7,15 @@ Notable changes to this project are documented in this file. The format is based
 Breaking changes:
 
 New features:
-- Added semigroup instance (#18 by @jmatsushita)
 
 Bugfixes:
 
 Other improvements:
+
+## [v6.1.0](https://github.com/purescript/purescript-nonempty/releases/tag/v6.0.0) - 2021-10-21
+
+New features:
+- Added semigroup instance (#18 by @jmatsushita)
 
 ## [v6.0.0](https://github.com/purescript/purescript-nonempty/releases/tag/v6.0.0) - 2021-02-26
 
