@@ -168,9 +168,9 @@ instance foldable1NonEmpty :: Foldable f => Foldable1 (NonEmpty f) where
 instance unfoldable1NonEmpty :: Unfoldable f => Unfoldable1 (NonEmpty f) where
   unfoldr1 f b = uncurry (:|) $ unfoldr (map f) <$> f b
 
--- | For `Semigroup` we don't know for sure that `pure` will behave sensibly 
--- | alongside `<>` because we don't have any laws which govern their
--- | behaviour, in practice, with Array, List, it should behave sensibly.
+-- | This is a lawful `Semigroup` instance that will behave sensibly for common nonempty
+-- | containers like lists and arrays. However, it's not guaranteed that `pure` will behave
+-- | sensibly alongside `<>` for all types, as we don't have any laws which govern their behavior.
 instance semigroupNonEmpty
   :: (Applicative f, Semigroup (f a))
   => Semigroup (NonEmpty f a) where
