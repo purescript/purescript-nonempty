@@ -27,3 +27,4 @@ main = do
   assert $ oneOf (0 :| Nothing) == oneOf (0 :| Just 1)
   assert $ second (1 :| 2 :| [3, 4]) == 2
   assert $ U1.range 0 9 == (0 :| [1, 2, 3, 4, 5, 6, 7, 8, 9])
+  assert $ (0 :| [1,2]) <> (3 :| [4,5]) == (0 :| [1, 2, 3, 4, 5])
