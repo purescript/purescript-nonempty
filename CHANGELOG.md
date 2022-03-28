@@ -12,6 +12,7 @@ New features:
 Bugfixes:
 
 Other improvements:
+- Drop deprecation warning on `fold1` (#45 by @JordanMartinez)
 
 ## [v6.1.0](https://github.com/purescript/purescript-nonempty/releases/tag/v6.0.0) - 2021-10-21
 
