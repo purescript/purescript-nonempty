@@ -12,9 +12,9 @@ module Data.NonEmpty
   ) where
 
 import Prelude
-
 import Control.Alt ((<|>))
 import Control.Alternative (class Alternative)
+import Control.MonadPlus (class MonadPlus)
 import Control.Plus (class Plus, empty)
 import Data.Eq (class Eq1)
 import Data.Foldable (class Foldable, foldl, foldr, foldMap)
@@ -43,7 +43,8 @@ import Data.Unfoldable1 (class Unfoldable1)
 -- | nonEmptyList :: NonEmpty List Int
 -- | nonEmptyList = NonEmpty 1 (2 : 3 : Nil)
 -- | ```
-data NonEmpty f a = NonEmpty a (f a)
+data NonEmpty f a
+  = NonEmpty a (f a)
 
 -- | An infix synonym for `NonEmpty`.
 -- |
@@ -130,9 +131,9 @@ derive instance ord1NonEmpty :: Ord1 f => Ord1 (NonEmpty f)
 
 derive instance functorNonEmpty :: Functor f => Functor (NonEmpty f)
 
-instance functorWithIndex
-  :: FunctorWithIndex i f
-  => FunctorWithIndex (Maybe i) (NonEmpty f) where
+instance functorWithIndex ::
+  FunctorWithIndex i f =>
+  FunctorWithIndex (Maybe i) (NonEmpty f) where
   mapWithIndex f (a :| fa) = f Nothing a :| mapWithIndex (f <<< Just) fa
 
 instance foldableNonEmpty :: Foldable f => Foldable (NonEmpty f) where
@@ -140,9 +141,9 @@ instance foldableNonEmpty :: Foldable f => Foldable (NonEmpty f) where
   foldl f b (a :| fa) = foldl f (f b a) fa
   foldr f b (a :| fa) = f a (foldr f b fa)
 
-instance foldableWithIndexNonEmpty
-  :: (FoldableWithIndex i f)
-  => FoldableWithIndex (Maybe i) (NonEmpty f) where
+instance foldableWithIndexNonEmpty ::
+  (FoldableWithIndex i f) =>
+  FoldableWithIndex (Maybe i) (NonEmpty f) where
   foldMapWithIndex f (a :| fa) = f Nothing a <> foldMapWithIndex (f <<< Just) fa
   foldlWithIndex f b (a :| fa) = foldlWithIndex (f <<< Just) (f Nothing b a) fa
   foldrWithIndex f b (a :| fa) = f Nothing a (foldrWithIndex (f <<< Just) b fa)
@@ -151,11 +152,10 @@ instance traversableNonEmpty :: Traversable f => Traversable (NonEmpty f) where
   sequence (a :| fa) = NonEmpty <$> a <*> sequence fa
   traverse f (a :| fa) = NonEmpty <$> f a <*> traverse f fa
 
-instance traversableWithIndexNonEmpty
-  :: (TraversableWithIndex i f)
-  => TraversableWithIndex (Maybe i) (NonEmpty f) where
-  traverseWithIndex f (a :| fa) =
-    NonEmpty <$> f Nothing a <*> traverseWithIndex (f <<< Just) fa
+instance traversableWithIndexNonEmpty ::
+  (TraversableWithIndex i f) =>
+  TraversableWithIndex (Maybe i) (NonEmpty f) where
+  traverseWithIndex f (a :| fa) = NonEmpty <$> f Nothing a <*> traverseWithIndex (f <<< Just) fa
 
 instance foldable1NonEmpty :: Foldable f => Foldable1 (NonEmpty f) where
   foldMap1 f (a :| fa) = foldl (\s a1 -> s <> f a1) (f a) fa
@@ -168,7 +168,22 @@ instance unfoldable1NonEmpty :: Unfoldable f => Unfoldable1 (NonEmpty f) where
 -- | This is a lawful `Semigroup` instance that will behave sensibly for common nonempty
 -- | containers like lists and arrays. However, it's not guaranteed that `pure` will behave
 -- | sensibly alongside `<>` for all types, as we don't have any laws which govern their behavior.
-instance semigroupNonEmpty
-  :: (Applicative f, Semigroup (f a))
-  => Semigroup (NonEmpty f a) where
+instance semigroupNonEmpty ::
+  (Applicative f, Semigroup (f a)) =>
+  Semigroup (NonEmpty f a) where
   append (a1 :| f1) (a2 :| f2) = a1 :| (f1 <> pure a2 <> f2)
+
+instance applyNonEmpty :: MonadPlus f => Apply (NonEmpty f) where
+  apply = ap
+
+instance applicativeNonEmpty :: MonadPlus f => Applicative (NonEmpty f) where
+  pure = singleton
+
+instance bindNonEmpty :: MonadPlus f => Bind (NonEmpty f) where
+  bind (a :| fa) f =
+    let
+      (b :| fb) = f a
+    in
+      b :| (fb <|> (fa >>= f >>> oneOf))
+
+instance monadNonEmpty :: MonadPlus f => Monad (NonEmpty f)
