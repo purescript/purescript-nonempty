@@ -4,7 +4,7 @@ import Prelude
 
 import Data.Foldable (fold, foldl)
 import Data.Maybe (Maybe(..))
-import Data.NonEmpty (NonEmpty, (:|), oneOf, head, tail, singleton)
+import Data.NonEmpty (NonEmpty, head, oneOf, singleton, tail, (:|))
 import Data.Semigroup.Foldable (fold1, foldl1, foldr1)
 import Data.Unfoldable1 as U1
 import Effect (Effect)
@@ -19,12 +19,12 @@ main :: Effect Unit
 main = do
   assert $ singleton 0 == 0 :| []
   assert $ 0 :| Nothing /= 0 :| Just 1
-  assert $ foldl1 (\l r -> "(" <> l <> r <> ")") ("a" :| ["b", "c", "d"]) == "(((ab)c)d)"
-  assert $ foldr1 (\l r -> "(" <> l <> r <> ")") ("a" :| ["b", "c", "d"]) == "(a(b(cd)))"
-  assert $ foldl (+) 0 (1 :| [2, 3]) == 6
-  assert $ fold1 ("Hello" :| [" ", "World"]) == "Hello World"
-  assert $ fold ("Hello" :| [" ", "World"]) == "Hello World"
+  assert $ foldl1 (\l r -> "(" <> l <> r <> ")") ("a" :| [ "b", "c", "d" ]) == "(((ab)c)d)"
+  assert $ foldr1 (\l r -> "(" <> l <> r <> ")") ("a" :| [ "b", "c", "d" ]) == "(a(b(cd)))"
+  assert $ foldl (+) 0 (1 :| [ 2, 3 ]) == 6
+  assert $ fold1 ("Hello" :| [ " ", "World" ]) == "Hello World"
+  assert $ fold ("Hello" :| [ " ", "World" ]) == "Hello World"
   assert $ oneOf (0 :| Nothing) == oneOf (0 :| Just 1)
-  assert $ second (1 :| 2 :| [3, 4]) == 2
-  assert $ U1.range 0 9 == (0 :| [1, 2, 3, 4, 5, 6, 7, 8, 9])
-  assert $ (0 :| [1,2]) <> (3 :| [4,5]) == (0 :| [1, 2, 3, 4, 5])
+  assert $ second (1 :| 2 :| [ 3, 4 ]) == 2
+  assert $ U1.range 0 9 == (0 :| [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ])
+  assert $ (0 :| [ 1, 2 ]) <> (3 :| [ 4, 5 ]) == (0 :| [ 1, 2, 3, 4, 5 ])

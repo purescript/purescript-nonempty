@@ -17,6 +17,7 @@ Other improvements:
 ## [v7.0.0](https://github.com/purescript/purescript-nonempty/releases/tag/v7.0.0) - 2022-04-27
 
 Breaking changes:
+
 - Update project and deps to PureScript v0.15.0 (#51 by @JordanMartinez)
 
 New features:
@@ -24,16 +25,19 @@ New features:
 Bugfixes:
 
 Other improvements:
+
 - Drop deprecation warning on `fold1` (#45 by @JordanMartinez)
 
 ## [v6.1.0](https://github.com/purescript/purescript-nonempty/releases/tag/v6.0.0) - 2021-10-21
 
 New features:
+
 - Added semigroup instance (#18 by @jmatsushita)
 
 ## [v6.0.0](https://github.com/purescript/purescript-nonempty/releases/tag/v6.0.0) - 2021-02-26
 
 Breaking changes:
+
 - Added support for PureScript 0.14 and dropped support for all previous versions (#38, #44)
 
 New features:
@@ -41,6 +45,7 @@ New features:
 Bugfixes:
 
 Other improvements:
+
 - Fixed `Foldable1 (NonEmpty f)` instance, as `Foldable1` now has `foldr1` and `foldl1` as members (#39)
 - Deprecated monomorphic `foldl1`, suggesting the polymorphic `foldl1` from `Data.Semigroup.Foldable` instead (#42)
 - Added examples (#36)
