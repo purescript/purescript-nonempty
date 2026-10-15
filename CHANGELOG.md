@@ -12,6 +12,8 @@ Bugfixes:
 
 Other improvements:
 
+- Migrate from Bower/Pulp to Spago and update CI and formatting tools.
+
 ## [v7.0.0](https://github.com/purescript/purescript-nonempty/releases/tag/v7.0.0) - 2022-04-27
 
 Breaking changes:
