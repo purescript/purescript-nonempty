@@ -141,8 +141,7 @@ instance foldableNonEmpty :: Foldable f => Foldable (NonEmpty f) where
   foldr f b (a :| fa) = f a (foldr f b fa)
 
 instance foldableWithIndexNonEmpty ::
-  ( FoldableWithIndex i f
-  ) =>
+  FoldableWithIndex i f =>
   FoldableWithIndex (Maybe i) (NonEmpty f) where
   foldMapWithIndex f (a :| fa) = f Nothing a <> foldMapWithIndex (f <<< Just) fa
   foldlWithIndex f b (a :| fa) = foldlWithIndex (f <<< Just) (f Nothing b a) fa
@@ -153,8 +152,7 @@ instance traversableNonEmpty :: Traversable f => Traversable (NonEmpty f) where
   traverse f (a :| fa) = NonEmpty <$> f a <*> traverse f fa
 
 instance traversableWithIndexNonEmpty ::
-  ( TraversableWithIndex i f
-  ) =>
+  TraversableWithIndex i f =>
   TraversableWithIndex (Maybe i) (NonEmpty f) where
   traverseWithIndex f (a :| fa) =
     NonEmpty <$> f Nothing a <*> traverseWithIndex (f <<< Just) fa
